@@ -93,6 +93,36 @@ jQuery(function ($) {
         })
     }
 
+    showLoading('Wake up...');
+    $.ajax({
+        type: 'POST',
+        async: true,
+        url: "http://localhost:5001/init",
+        dataType: 'json',
+        success: function (data) {
+            Swal.close();
+            if (data.success === 0) {
+                if (data.status) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'The app is currently being updated, please try again later!',
+                        allowOutsideClick: false,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: data.message,
+                        allowOutsideClick: false,
+                        showConfirmButton: data.showButtons
+                    });
+                }
+            }
+        }
+    });
+
     $(".checkUser").on('click', () => {
         showLoading('Looking for your key...');
         let licKeyInput = $('.licKey');
